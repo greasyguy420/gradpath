@@ -140,16 +140,16 @@ columns relevant to the problem:
 Term,Last Name,First Name,UID,Class,Admit Term,Stu Type,USF Earned Hours,Overall Earned Hours,USF GPA,Theatre Major,Theatre Conc
 ```
 
-definitions:
-Term: 202608      yyyyss, yy=year, ss=semester code (01=Spring, 05=Summer, 08=Fall)
-UID               university ID number, begins with 'U' followed by 8 digits
-Class             year in school (1=year 1, 2 = year 2, etc.)
-Admit Term        term student began at the current university in yyyyss format above
-Stu Type          B=Beginner,First time in college; J=Transfer from FL Comm. College
-Theatre Major     major (MTR=musical theatre, TAR=theatre)
-Theatre Conc      concentration within major, only applies to TAR major (TAP=performance, 
-                  TAA=theatre arts, TDAT=theatre design and technology)
-
+#### definitions
+|term             | definition            |
+| :---            | :---                  |
+|Term (202608)    | yyyyss, yy=year, ss=semester code (01=Spring, 05=Summer, 08=Fall)     |
+|UID              | university ID number, begins with 'U' followed by 8 digits            |
+|Class            | year in school (1=year 1, 2 = year 2, etc.)                           |
+|Admit Term       | term student began at the current university in yyyyss format above   |
+|Stu Type         | B=Beginner,First time in college; J=Transfer from FL Comm. College    |
+|Theatre Major    | major (MTR=musical theatre, TAR=theatre)                              |
+|Theatre Conc     | concentration within major, only applies to TAR major <br> (TAP=performance, TAA=theatre arts, TDAT=theatre design and technology)      |
 
 
 ### 2. THE_Courses.csv, TPA_Courses.csv, TPP_Courses.csv, Practicum_Courses.csv
@@ -175,13 +175,14 @@ columns relevant to the problem:
 Prefix,Number,Course Title,UID,Name,Final,Grade Mode,Credits,Passing
 ```
 
-definitions:
-Prefix            theatre course prefixes (ex: THE, TPA, TPP)
-UID               university ID number, begins with 'U' followed by 8 digits
-Grade Mode        grade mode for course (R-regular, S=satisfactory/unsatisfactory)
-Credits           credit hours earned for the course
-Passing           passing status of the course completion (c=complete, ip=in progress)
-
+#### definitions
+|term             | definition      |
+| :---            | :---            |
+|Prefix           | theatre course prefixes (ex: THE, TPA, TPP)                           |
+|UID              | university ID number, begins with 'U' followed by 8 digits            |
+|Grade Mode       | grade mode for course (R-regular, S=satisfactory/unsatisfactory)      |
+|Credits          | credit hours earned for the course                                    |
+|Passing          | passing status of the course completion (c=complete, ip=in progress)  |
 
 
 ### 3. degree_requirements.csv
@@ -203,14 +204,16 @@ TAR,Core,History Elective,Course,1,"THE3110,THE3111"
 TAR,TAP,Performance Electives,Credits,9,"TPP3230,TPP3251C,TPP3252C,TPP3580,TPP4221,TPP4310,TPP4600,TPP4920,TPP4923"
 ```
 
-definitions:
-Degree            major (MTR=musical theatre, TAR=theatre)
-Conc              theatre concentration (core=all, TAP=performance, TAA=theatre arts,
-                  TDAT=theatre design and technology)
-Requirement       requirement for degree, could be individual or group of courses
-Course or Credit  whether the requirement is for a certain number of courses or credits
-Quantity          number of courses or credits needed to fulfill requirement
-Courses Accepted  courses that will fulfill the requirement
+#### definitions
+|term             | definition      |
+| :---            | :---            |
+|Degree           | major (MTR=musical theatre, TAR=theatre)                              |
+|Conc             | theatre concentration (core=all, TAP=performance, TAA=theatre arts, <br> TDAT=theatre design and technology)    |
+|Requirement      | requirement for degree, could be individual or group of courses       |
+|Course or Credit | whether the requirement is for a certain number of courses or credits |
+|Quantity         | number of courses or credits needed to fulfill requirement            |
+|Courses Accepted | courses that will fulfill the requirement                             |
+
 
 ### 4. prerequisites.csv
 
@@ -233,16 +236,16 @@ THE4562,,THE4434,C,No,,OR
 THE4562,,THE4480,C,No,)
 ```
 
-definitions:
-Course            course requiring prerequisites
-'('               opening parenthesis for requisite groupings
-Requisite         course required to take the course either as pre, or pre-co
-Min Grade         minimum grade for requisite course to count
-Concurrency       if requisite course must be completed prior to registration or if
-                  it may be completed concurrently
-')'               closing parenthesis for requisite groupings
-And/Or            logic for if course must be completed in addition to or other
-                  courses or as one of several options
+#### definitions
+|term             | definition      |
+| :---            | :---            |
+|Course           | course requiring prerequisites    |
+|'('              | opening parenthesis for requisite groupings   |
+|Requisite        | course required to take the course either as pre, or pre-co     |
+|Min Grade        | minimum grade for requisite course to count   |
+|Concurrency      | if requisite course must be completed prior to registration or if it may be completed concurrently  |
+|')'              | closing parenthesis for requisite groupings   |
+|And/Or           | logic for if course must be completed in addition to or other courses or as one of several options  |
 
 
 ## suggested folder structure
@@ -430,9 +433,8 @@ factors considered to calculate minimum time to graduation:
 
 suggested rules:
 
-| missing   | prereq complete | min time to     | steps away from | need category   |
-| course    | or in-progress  | graduation      | course/capstone | needed in...    |
-| --------- | --------------- | --------------- | --------------- | --------------- |
+| course <br> missing | prereq complete <br> or in-progress | min time to <br> graduation | steps from <br> course/capstone | needed in...    |
+| :-------: | :-------------: | :-------------- | :-------------: | :-------------- |
 | yes       | yes             | 1 semester      | 1/1             | 1 semester      |
 | yes       | yes             | 2 semesters     | 1/2             | 1 semester      |
 | yes       | yes             | 3 semesters     | 1/3             | 1 semester      |
