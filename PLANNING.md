@@ -457,7 +457,7 @@ suggested rules:
 | yes       | no              | 6+ semesters    | 2/4             | 4+ semesters    |       
 
 
-### step 8: assign priority
+### step 10: assign priority
 
 the system assigns a priority group to each student and course.
 
@@ -486,7 +486,7 @@ prerequisites are not complete.
 priority: none
 ```
 
-### step 9: aggregate course demand
+### step 11: aggregate course demand
 
 the system counts how many students need each course in each future-semester category.
 
@@ -498,7 +498,7 @@ THE4200,8,4,1,0,13
 THE3100,5,7,2,1,15
 ```
 
-### step 10: generate reports
+### step 12: generate reports
 
 the system exports two main reports.
 
