@@ -282,15 +282,47 @@ outputs/course_demand_report.csv
 outputs/priority_students.csv
 ```
 
-## Optional Dashboard
+## Post-Intermediate Analytics
 
-if the streamlit dashboard is added, run:
+The post-intermediate analytics step starts from `data/intermediate/tap_intermediate_data.csv`. This file already contains each student's requirement status in a wide format. The project converts it into `student_readiness_status.csv`, then creates graduation progress, course demand, and priority student reports.
+
+Input file:
+
+```text
+data/intermediate/tap_intermediate_data.csv
+```
+
+To run this part:
+
+```bash
+python src/prerequisite_checker.py
+python src/demand_report.py
+```
+
+Generated files:
+
+```text
+data/intermediate/student_readiness_status.csv
+outputs/student_graduation_summary.csv
+outputs/course_demand_report.csv
+outputs/priority_students.csv
+```
+
+To view the dashboard:
 
 ```bash
 streamlit run app.py
 ```
 
-The dashboard may show:
+## Dashboard
+
+to open the dashboard, run:
+
+```bash
+streamlit run app.py
+```
+
+The dashboard shows:
 
 1. course demand summary
 2. student priority groups
