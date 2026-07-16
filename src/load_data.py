@@ -1,14 +1,31 @@
-# Begin Sneha
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+#
+#   Title:  load_data
+#   Description:    This program will buld an aggrigated intermediate data file
+#           from the raw data. It will first pull the list of students by
+#           concentration. Then, it will add columns for the individual degree
+#           requirements. Next, it will check for completion of each course and
+#           if missing, will check for readiness via prerequisites.
+#   Dependent Files:
+#       - /data/raw/
+#           - <prefix>Practicum_Courses.csv
+#           - <prefix>THE_Courses.csv
+#           - <prefix>TheatreMajors.csv
+#           - <prefix>TPA_Courses.csv
+#           - <prefix>TPP_Courses.csv
+#       - /data/static/
+#           - degree_requirements.csv
+#       - /src/
+#           - utils.py
+#   Output:
+#       - /data/intermediate/
+#           - tap_intermediate_data.csv
+#           - tdat_intermediate_data.csv (future add)
+#           - taa_intermediate_data.csv (future add)
+#           - mtr_intermediate_data.csv (future add)
+#
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
 
-
-# end Sneha
-
-
-# Begin Josh
-
-# End Josh
-
-# Begin Chris
 
 # imports
 from pathlib import Path
@@ -21,75 +38,6 @@ from utils import prereq_list
 ####### Change This #########
 debug = False
 filePrefix = "Train01_"
-
-def check_pre_complete (id, accCrsList):
-    pass
-
-def check_complete (id, accCrsList):
-    pass
-
-def check_prereqs(uid, course):
-    max_dist = 1
-    chklst = prereq_list.get(course)
-    if chklst == None:
-        return ('r', 1, 1)
-    else:
-        depth = 0
-        and_flag = True
-        for ind, req_list in enumerate(chklst):
-            if ind == 0:
-                depth = req_list
-            else:
-                if req_list[0] == 'OR':
-                    or_flag = False
-                    min_dist = 999
-                    for crs in req_list[1:]:
-                        stat = check_pre_complete(uid, [crs])
-                        if (stat == 'c') or (stat == 'ip'):
-                            or_flag = True
-                            min_dist = 1
-                            break
-                        else:
-                            stat = check_prereqs(uid, crs)
-                            min_dist = min(min_dist, stat[1]+1)
-                    if or_flag == False:
-                        and_flag = False
-                    max_dist = max(max_dist, min_dist)
-                elif req_list[0] == 'AND':
-                    for crs in req_list[1:]:
-                        stat = check_pre_complete(uid, [crs])
-                        if (stat == 'c') or (stat == 'ip'):
-                            pass
-                        else:
-                            and_flag = False
-                            stat = check_prereqs(uid, crs)
-                            max_dist = max(max_dist, stat[1]+1)
-                            if debug:
-                                print("MaxDist:", max_dist)
-        depth = depth + (max_dist-1)
-        if debug:
-            print("MaxDist:", max_dist, " Depth:", depth)
-            print("Ready:", and_flag)
-        if and_flag:
-            return ('r', 1, depth)
-        else:
-            return ('n', max_dist, depth)
-
-
-
-def check_readiness(uid, courses) :
-    min_dist = 99
-    min_depth = 99
-    for course in courses:
-        status = check_prereqs(uid, course)
-        min_dist = min(min_dist, status[1])
-        min_depth = min(min_depth, status[2])
-    if min_dist == 1:
-        return ('r', min_dist, min_depth)
-    else:
-        return ('n', min_dist, min_depth)
-    # pass
-
 
 
 # Get path separator based on OS
@@ -208,6 +156,22 @@ for index, row in df_Majors.iterrows():
 if debug:
     print(tdatIntermediateData)
 
+
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+#
+#   Title:  check_pre_complete
+#   Description:    This program will check if a degree requirement is complete
+#       or in progress. It is different from the method check_complete in that
+#       it does not mark the course as used. This is used when checking
+#       prerequisites.
+#   Dependencies:
+#       - dataframes of raw course completions
+#       - used by check_prereqs
+#   Input: studet UID and courses to check
+#   Output: completion status ex: 'c'-complete; 'ip'-in progress or None if 
+#       incomplete
+#
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
 def check_pre_complete (id, accCrsList):
     condition = ((df_THE_Courses['Full Course'].isin(accCrsList)) &
                                   (df_THE_Courses['UID'] == id) &
@@ -258,8 +222,19 @@ def check_pre_complete (id, accCrsList):
                     return df_Practicum_Courses.loc[firstIndex, 'Passing']
                 else:
                     return None
+# end check_pre_complete
 
-
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+#
+#   Title:  check_complete
+#   Description:    This program will check if a degree requirement is complete
+#       or in progress. It till then mark the course as used in the courses df
+#       so it cannot be used to fulfill another degree requirement.
+#   Input: studet UID and courses to check
+#   Output: completion status ex: 'c'-complete; 'ip'-in progress or None if 
+#       incomplete
+#
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
 def check_complete (id, accCrsList):
     condition = ((df_THE_Courses['Full Course'].isin(accCrsList)) &
                                   (df_THE_Courses['UID'] == id) &
@@ -314,7 +289,21 @@ def check_complete (id, accCrsList):
                     return df_Practicum_Courses.loc[firstIndex, 'Passing']
                 else:
                     return None
-                
+# end check_complete
+
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+#
+#   Title:  check_num_complete
+#   Description:    This program checks how many credits are remiening for
+#       degree requirements that are fulfilled by the number of credit hours
+#       completed.
+#   Input: studet UID, courses to check, and the degree requirement
+#   Output: tuple with three fields:
+#       -status ex: 'c'-complete; 'ip'-in progress; 'n'-not ready
+#       -number of credit hours remaining to fulfill requirement
+#       -total credits required to fulfill requirement
+#
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #                
 def check_num_complete (id, accCrsList, req):
     reqCredits = df_DegreeReqs.loc[df_DegreeReqs['Requirement'] == req, 'Quantity' ].values[0]
     creditsNeeded = reqCredits
@@ -387,7 +376,19 @@ def check_num_complete (id, accCrsList, req):
         else:
             status = ('n', creditsNeeded, reqCredits)
     return status
-    
+# end check_num_complete
+
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+#
+#   Title:  check_Practicum
+#   Description:    This program wil check how many practicum courses completed
+#       by the student and output the number of practicum courses remaining to
+#       be used for the depth of the practicum progression. This is because
+#       students may typically only take one practicum per semester.
+#   Input: studet UID
+#   Output: practicum courses remaining
+#
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #    
 def check_Practicum(id):
     accCrsList = ['TPA2290', 'TPP2190', 'TPA4293', 'TPP4193']
     condition = ((df_Practicum_Courses['Full Course'].isin(accCrsList)) &
@@ -399,77 +400,176 @@ def check_Practicum(id):
         return pracNeeded
     else:
         return 0
+# end check_Practicum
 
-
-
-##### BUILD TAP DATA FRAME #####
-df_tapIntermediate = pd.DataFrame(tapIntermediateData, columns=majorCols)
-for col in tapIntermediateCols:
-    df_tapIntermediate[col] = None
-
-for index, row in df_tapIntermediate.iterrows():
-    if debug and index >6:
-        break
-    curUID = row['UID']
-    if debug:
-        print("\n\n\n*************", curUID, "************\n")
-
-    curDist = 0
-    pracNeeded = 4
-    for col in coreReqs:
-        if not (col.endswith("Dist")):
-            acceptCourses = (df_DegreeReqs.loc[df_DegreeReqs['Requirement'] == (col[:-1] if (col[-1]).isnumeric() else col), 'Courses Accepted'].values[0]).split(",")
-            if debug:
-                print("Req:" + col + " Courses:" + str(acceptCourses))
-            if (col == 'Technical Theatre Practicum I' or col == 'Lower Level Practicum' or col == 'Upper Level Practicum' or col == 'Upper Level Practicum2'):
-                if (col == 'Technical Theatre Practicum I'):
-                    pracNeeded = check_Practicum(curUID)
-                status = check_complete(curUID, acceptCourses)
-                if (status != None):
-                    df_tapIntermediate.loc[index, col] = status
-                    curDist = 0
-                else:
-                    status = check_readiness(curUID, acceptCourses) 
-                    curDist = str(status[1]) + "/" + str(pracNeeded)
-                    df_tapIntermediate.loc[index, col] = status[0]
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+#
+#   Title:  check_prereqs
+#   Description:    This program will check the completion of the prerequisites
+#       of a course and output its readiness status.
+#   Input: studet UID and course to check
+#   Output: tuple with three fields:
+#       -readiness ex: 'r'-ready; 'n'-not ready
+#       -maximum distance to the course (semesters)
+#       -depth from the end of the prereq chain
+#
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+def check_prereqs(uid, course):
+    max_dist = 1
+    chklst = prereq_list.get(course)
+    if chklst == None:
+        return ('r', 1, 1)
+    else:
+        depth = 0
+        and_flag = True
+        for ind, req_list in enumerate(chklst):
+            if ind == 0:
+                depth = req_list
             else:
-                status = check_complete(curUID, acceptCourses)
-                if (status != None):
-                    df_tapIntermediate.loc[index, col] = status
-                    curDist = 0
-                else:
-                    status = check_readiness(curUID, acceptCourses) 
-                    curDist = str(status[1]) + "/" + str(status[2])
-                    df_tapIntermediate.loc[index, col] = status[0]
+                if req_list[0] == 'OR':
+                    or_flag = False
+                    min_dist = 999
+                    for crs in req_list[1:]:
+                        stat = check_pre_complete(uid, [crs])
+                        if (stat == 'c') or (stat == 'ip'):
+                            or_flag = True
+                            min_dist = 1
+                            break
+                        else:
+                            stat = check_prereqs(uid, crs)
+                            min_dist = min(min_dist, stat[1]+1)
+                    if or_flag == False:
+                        and_flag = False
+                    max_dist = max(max_dist, min_dist)
+                elif req_list[0] == 'AND':
+                    for crs in req_list[1:]:
+                        stat = check_pre_complete(uid, [crs])
+                        if (stat == 'c') or (stat == 'ip'):
+                            pass
+                        else:
+                            and_flag = False
+                            stat = check_prereqs(uid, crs)
+                            max_dist = max(max_dist, stat[1]+1)
+                            if debug:
+                                print("MaxDist:", max_dist)
+        depth = depth + (max_dist-1)
+        if debug:
+            print("MaxDist:", max_dist, " Depth:", depth)
+            print("Ready:", and_flag)
+        if and_flag:
+            return ('r', 1, depth)
         else:
-            df_tapIntermediate.loc[index, col] = curDist
-    for col in tapReqs:
-        if not (col.endswith("Dist")):
-            acceptCourses = (df_DegreeReqs.loc[df_DegreeReqs['Requirement'] == col, 'Courses Accepted'].values[0]).split(",")
-            if debug:
-                print("Req:" + col + " Courses:" + str(acceptCourses))
-            if col == 'Performance Electives':
-                status = check_num_complete(curUID, acceptCourses, col)
-                if status[0] == 'c':
-                    curDist = 0
+            return ('n', max_dist, depth)
+# end check_prereqs
+
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+#
+#   Title:  check_readiness
+#   Description:    This program will check if a student is read for each
+#       course that fulfills a degree requirement. It will then output the
+#       status for the course that is closest to being able to take based
+#       on the chain of prerequisites.
+#   Input:  student UID and list of courses that fulfill the degree requirement
+#   Output: tuple with three fields:
+#       -readiness ex: 'r'-ready; 'n'-not ready
+#       -minimum distance to a course (semesters)
+#       -minimum depth from the end of the prereq chain
+#
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+def check_readiness(uid, courses) :
+    min_dist = 99
+    min_depth = 99
+    for course in courses:
+        status = check_prereqs(uid, course)
+        min_dist = min(min_dist, status[1])
+        min_depth = min(min_depth, status[2])
+    if min_dist == 1:
+        return ('r', min_dist, min_depth)
+    else:
+        return ('n', min_dist, min_depth)
+# end check_readiness
+
+
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+#
+#   Title:  main
+#   Description:    This program will buld an aggrigated intermediate data file
+#           from the raw data. It will first pull the list of students by
+#           concentration. Then, it will add columns for the individual degree
+#           requirements. Next, it will check for completion of each course and
+#           if missing, will check for readiness via prerequisites.
+#
+#   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #
+
+def main():
+    ##### BUILD TAP DATA FRAME #####
+    df_tapIntermediate = pd.DataFrame(tapIntermediateData, columns=majorCols)
+    for col in tapIntermediateCols:
+        df_tapIntermediate[col] = None
+
+    for index, row in df_tapIntermediate.iterrows():
+        if debug and index >6:
+            break
+        curUID = row['UID']
+        if debug:
+            print("\n\n\n*************", curUID, "************\n")
+
+        curDist = 0
+        pracNeeded = 4
+        for col in coreReqs:
+            if not (col.endswith("Dist")):
+                acceptCourses = (df_DegreeReqs.loc[df_DegreeReqs['Requirement'] == (col[:-1] if (col[-1]).isnumeric() else col), 'Courses Accepted'].values[0]).split(",")
+                if debug:
+                    print("Req:" + col + " Courses:" + str(acceptCourses))
+                if (col == 'Technical Theatre Practicum I' or col == 'Lower Level Practicum' or col == 'Upper Level Practicum' or col == 'Upper Level Practicum2'):
+                    if (col == 'Technical Theatre Practicum I'):
+                        pracNeeded = check_Practicum(curUID)
+                    status = check_complete(curUID, acceptCourses)
+                    if (status != None):
+                        df_tapIntermediate.loc[index, col] = status
+                        curDist = 0
+                    else:
+                        status = check_readiness(curUID, acceptCourses) 
+                        curDist = str(status[1]) + "/" + str(pracNeeded)
+                        df_tapIntermediate.loc[index, col] = status[0]
                 else:
-                    curDist = str(status[1]) + "/" + str(status[2])
-                df_tapIntermediate.loc[index, col] = status[0]
+                    status = check_complete(curUID, acceptCourses)
+                    if (status != None):
+                        df_tapIntermediate.loc[index, col] = status
+                        curDist = 0
+                    else:
+                        status = check_readiness(curUID, acceptCourses) 
+                        curDist = str(status[1]) + "/" + str(status[2])
+                        df_tapIntermediate.loc[index, col] = status[0]
             else:
-                status = check_complete(curUID, acceptCourses)
-                if (status != None):
-                    df_tapIntermediate.loc[index, col] = status
-                    curDist = 0
-                else:
-                    status = check_readiness(curUID, acceptCourses) 
-                    curDist = str(status[1]) + "/" + str(status[2])
+                df_tapIntermediate.loc[index, col] = curDist
+        for col in tapReqs:
+            if not (col.endswith("Dist")):
+                acceptCourses = (df_DegreeReqs.loc[df_DegreeReqs['Requirement'] == col, 'Courses Accepted'].values[0]).split(",")
+                if debug:
+                    print("Req:" + col + " Courses:" + str(acceptCourses))
+                if col == 'Performance Electives':
+                    status = check_num_complete(curUID, acceptCourses, col)
+                    if status[0] == 'c':
+                        curDist = 0
+                    else:
+                        curDist = str(status[1]) + "/" + str(status[2])
                     df_tapIntermediate.loc[index, col] = status[0]
-        else:
-            df_tapIntermediate.loc[index, col] = curDist
+                else:
+                    status = check_complete(curUID, acceptCourses)
+                    if (status != None):
+                        df_tapIntermediate.loc[index, col] = status
+                        curDist = 0
+                    else:
+                        status = check_readiness(curUID, acceptCourses) 
+                        curDist = str(status[1]) + "/" + str(status[2])
+                        df_tapIntermediate.loc[index, col] = status[0]
+            else:
+                df_tapIntermediate.loc[index, col] = curDist
+        
+    df_tapIntermediate.to_csv(fnIntermediateTAP, index=False)
+    print("Intermediate Data File...Process Complete!")
+# end main
 
-
-            
-df_tapIntermediate.to_csv(fnIntermediateTAP, index=False)
-print("Intermediate Data File...Process Complete!")
-
-# End Chris
+if __name__ == "__main__":
+    main()
