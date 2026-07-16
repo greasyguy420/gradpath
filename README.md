@@ -261,12 +261,6 @@ On Windows:
 .venv\Scripts\activate
 ```
 
-On MacOS:
-
-```bash
-source .venv/bin/activate
-```
-
 ### 3. Install Dependencies
 
 ```bash
