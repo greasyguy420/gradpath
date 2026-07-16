@@ -22,8 +22,8 @@ import random
 debug = False
 numStudents = 100
 currentTerm = '202608'      # Current In-progress Semester
-setType = 'Train'           # Ex: ['Train', 'Valid', 'Test']
-setNum = 3
+setType = 'Test'           # Ex: ['Train', 'Valid', 'Test']
+setNum = 1
 #   #   #   #   #   #   #   #   #   #   #   #
 
 
@@ -41,21 +41,23 @@ practicumFile = f"{setType}{setNum:02}_Practicum_Courses.csv"
 courseListFile = "CourseList.xlsx"
 courseListSheet = "CourseList"
 
+# Get path separator based on OS
+pathSep = ""
+if (os.name == 'posix'):
+    pathSep = "/"
+else:
+    pathSep = "\\"
+
 
 # Get directories
-currentDir = Path.cwd()
-currentDir = str(currentDir)
+currentDirPath = Path(__file__).resolve().parent
+currentDir = str(currentDirPath)
 if (debug):
     print("cwd: ", currentDir)
 
-dataDir = currentDir
+currentDir += pathSep
+dataDir = str(currentDirPath.parent) + pathSep + "data" + pathSep + "raw" + pathSep
 
-if (os.name == 'posix'):
-    currentDir += "/"
-    dataDir += "/data/"
-else:
-    currentDir += "\\"
-    dataDir += "\\data\\"
 if (debug):
     print("Current Dir: ", currentDir)
     print("Data Dir: ", dataDir)
