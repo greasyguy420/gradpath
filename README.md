@@ -97,6 +97,19 @@ To view the dashboard:
 streamlit run app.py
 ```
 
+### Closing the program
+Close the dashboard browser window. Then return to the terminal.
+
+Enter [control]C:
+```bash
+^c
+```
+
+Exit the virtual environment:
+```bash
+deactivate
+```
+
 
 ## Problem
 
