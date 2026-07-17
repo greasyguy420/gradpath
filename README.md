@@ -33,17 +33,16 @@ gradpath tries to make this easier by using fake student data and course rules t
 
 gradpath will:
 
-1. load fake student data
-2. load fake completed-course records
-3. load fake degree requirements
-4. load fake prerequisite rules
-5. load fake course offering data
-6. compare completed courses with required courses
-7. identify missing required courses
-8. check whether prerequisites are complete
-9. estimate when each course may be needed
-10. create a course demand report
-11. create anonymized student priority groups
+1. load (fake) student data
+2. load (fake) completed-course records
+3. load degree requirements
+4. load prerequisite rules
+5. compare completed courses with required courses
+6. identify missing required courses
+7. check whether prerequisites are complete
+8. estimate when each course may be needed
+9. create a course demand report
+10. create anonymized student priority groups
 
 ## Planned Stack
 
@@ -90,16 +89,32 @@ reports or dashboard
 gradpath/
 │
 ├── data/
-│   ├── students.csv
-│   ├── student_courses.csv
-│   ├── degree_requirements.csv
-│   ├── prerequisites.csv
-│   └── course_offerings.csv
+│   ├── intermediate/
+│   │   ├── student_readiness_status.csv
+│   │   ├── tap_intermediate_data.csv
+│   │   └── tap_pre_intermediate_data.csv
+│   │
+│   ├── raw/
+│   │   ├── Practicum_Courses.csv
+│   │   ├── THE_Courses.csv
+│   │   ├── TPA_Courses.csv
+│   │   ├── TPP_Courses.csv
+│   │   └── TheatreMajors.csv
+│   │
+│   └──  static/
+│       ├── degree_requirements.csv
+│       └── prerequisites.csv
+│
+├── dataGen/
+│   ├── CourseList.xlsx
+│   └── StudentDataBuilder.py
 │
 ├── src/
+│   ├── demand_report.py
+│   ├── grad_dist.py
 │   ├── load_data.py
 │   ├── planner.py
-│   ├── demand_report.py
+│   ├── prerequisite_checker.py
 │   └── utils.py
 │
 ├── outputs/
@@ -114,54 +129,44 @@ gradpath/
 
 ## Data Files
 
-### students.csv
+### TheatreMajors.csv
 
-Stores fake student information.
+stores a list of theatre majors with fake student information.
 
-Expected columns:
+expected columns:
 
 ```csv
-student_id,major,concentration,expected_grad_term
+Term,Term Description,Last Name,First Name,UID,Count,Email,Camp,Coll,Dep 1,Levl,Prim Majr1,Prim Majr2,Seco Majr1,Seco Majr2,Minr1,Minr2,Prim Conc,Prim Conc2,Seco Conc,Seco Conc2,Class,Admit Term,Enrolled [Y/N],Stu Type,Student Type Description,Student Attribute,USF Earned Hours,Overall Earned Hours,USF GPA,Theatre Major,Theatre Conc
 ```
 
-### student_courses.csv
+### THE_Courses.csv, TPA_Courses.csv, TPP_Courses.csv, Practicum_Courses.csv
 
-Stores fake completed courses for each student.
+stores fake completed courses grouped by course prefix.
 
-Expected columns:
+expected columns:
 
 ```csv
-student_id,course_code,semester_taken
+Prefix,Number,Course Title,Section,CRN,Semester,UID,Name,Registration,Date,Midterm,Final,Grade Mode,Credits,Final Grade Entered,Passing,Passing Override
 ```
 
 ### degree_requirements.csv
 
-Stores required courses by concentration.
+stores required courses by degree and concentration.
 
-Expected columns:
+expected columns:
 
 ```csv
-concentration,course_code,requirement_type
+Degree,Conc,Requirement,Course or Credit,Quantity,Courses Accepted
 ```
 
 ### prerequisites.csv
 
-Stores course prerequisite rules.
+stores prerequisite rules.
 
-Expected columns:
-
-```csv
-course_code,prerequisite_course
-```
-
-### course_offerings.csv
-
-Stores when courses are normally offered.
-
-Expected columns:
+expected columns:
 
 ```csv
-course_code,offered_terms
+Course,'(',Requisite,Min Grade,Concurrency,')',And/Or
 ```
 
 ## How the Logic Works
@@ -202,20 +207,37 @@ priority: high
 
 ## Need Categories
 
-| condition                                                  | category               |
-| ---------------------------------------------------------- | ---------------------- |
-| missing course and prerequisites are complete              | needed in 1 semester   |
-| missing course and one prerequisite is missing             | needed in 2 semesters  |
-| missing course and multiple prerequisite steps are missing | needed in 3 semesters  |
-| course is needed later or unclear                          | needed in 4+ semesters |
+| course <br> missing | prereq complete <br> or in-progress | min time to <br> graduation | steps from <br> course/capstone | needed in...    |
+| :-------: | :-------------: | :-------------- | :-------------: | :-------------- |
+| yes       | yes             | 1 semester      | 1/1             | 1 semester      |
+| yes       | yes             | 2 semesters     | 1/2             | 1 semester      |
+| yes       | yes             | 3 semesters     | 1/3             | 1 semester      |
+| yes       | yes             | 4 semesters     | 1/4             | 1 semester      |
+| yes       | yes             | 2 semesters     | 1/1             | 2 semesters     |
+| yes       | no              | 2 semesters     | 2/2             | 2 semesters     |
+| yes       | yes             | 3 semesters     | 1/2             | 2 semesters     |
+| yes       | no              | 3 semesters     | 2/3             | 2 semesters     |
+| yes       | no              | 4 semesters     | 2/4             | 2 semesters     |
+| yes       | yes             | 3 semesters     | 1/1             | 3 semesters     |
+| yes       | yes             | 4 semesters     | 1/2             | 3 semesters     |
+| yes       | no              | 4 semesters     | 2/3             | 3 semesters     |
+| yes       | no              | 4 semesters     | 3/4             | 3 semesters     |
+| yes       | yes             | 5 semesters     | 1/3             | 3 semesters     |
+| yes       | no              | 5 semesters     | 2/4             | 3 semesters     |
+| yes       | yes             | 4+ semesters    | 1/1             | 4+ semesters    |
+| yes       | yes             | 5+ semesters    | 1/2             | 4+ semesters    |
+| yes       | no              | 5+ semesters    | 2/3             | 4+ semesters    |
+| yes       | yes             | 6+ semesters    | 1/3             | 4+ semesters    |
+| yes       | no              | 6+ semesters    | 2/4             | 4+ semesters    |
 
 ## Priority Levels
 
-| priority | meaning                                                       |
-| -------- | ------------------------------------------------------------- |
-| high     | course is required soon and prerequisites are complete        |
-| medium   | course is required but another course must be completed first |
-| low      | course is needed later                                        |
+| priority | meaning                                                          |
+| -------- | ---------------------------------------------------------------- |
+| high     | prereq's are complete and course is needed within 2 semesters    |
+| medium   | prereq's are complete and course is needed within 3 semesters    |
+| low      | prereq's are complete and course is needed in 4+ semesters       |
+| none     | course is required but another course must be completed first    |
 
 ## Expected Outputs
 
@@ -249,6 +271,7 @@ cd gradpath
 ```
 
 ### 2. Create a Virtual Environment
+On Mac or Linux:
 
 ```bash
 python -m venv .venv
@@ -258,6 +281,7 @@ source .venv/bin/activate
 On Windows:
 
 ```bash
+python -m venv .venv
 .venv\Scripts\activate
 ```
 
@@ -267,13 +291,19 @@ On Windows:
 pip install -r requirements.txt
 ```
 
-### 4. Run the Main Report Script
+### 4. Aggrigate the data
+
+```bash
+python src/grad_dist.py
+```
+
+### 5. Run the Main Report Script
 
 ```bash
 python src/demand_report.py
 ```
 
-### 5. Check the Output Files
+### 6. Check the Output Files
 
 the generated reports should appear inside the `outputs/` folder.
 
