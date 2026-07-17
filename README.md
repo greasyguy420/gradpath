@@ -14,6 +14,90 @@ This project uses fictional data only. it does not use real student records.
 * Christopher Pyfrom
 * Joshua Smith
 
+## How to Run the Project
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd gradpath
+```
+
+### 2. Create a Virtual Environment
+On Mac or Linux:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+On Windows:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Aggrigate the data
+
+```bash
+python src/grad_dist.py
+```
+
+### 5. Run the Main Report Script
+
+```bash
+python src/demand_report.py
+```
+
+### 6. Check the Output Files
+
+the generated reports should appear inside the `outputs/` folder.
+
+```text
+outputs/course_demand_report.csv
+outputs/priority_students.csv
+```
+
+### Post-Intermediate Analytics
+
+The post-intermediate analytics step starts from `data/intermediate/tap_intermediate_data.csv`. This file already contains each student's requirement status in a wide format. The project converts it into `student_readiness_status.csv`, then creates graduation progress, course demand, and priority student reports.
+
+Input file:
+
+```text
+data/intermediate/tap_intermediate_data.csv
+```
+
+To run this part:
+
+```bash
+python src/prerequisite_checker.py
+python src/demand_report.py
+```
+
+Generated files:
+
+```text
+data/intermediate/student_readiness_status.csv
+outputs/student_graduation_summary.csv
+outputs/course_demand_report.csv
+outputs/priority_students.csv
+```
+
+To view the dashboard:
+
+```bash
+streamlit run app.py
+```
+
+
 ## Problem
 
 Departments cannot always offer every course every semester. Some required courses are offered often, while upper-level or concentration-specific courses may be offered less often.
@@ -259,89 +343,6 @@ Example columns:
 
 ```csv
 student_id,course_code,priority,reason
-```
-
-## How to Run the Project
-
-### 1. Clone the Repository
-
-```bash
-git clone <repository-url>
-cd gradpath
-```
-
-### 2. Create a Virtual Environment
-On Mac or Linux:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-On Windows:
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-### 3. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Aggrigate the data
-
-```bash
-python src/grad_dist.py
-```
-
-### 5. Run the Main Report Script
-
-```bash
-python src/demand_report.py
-```
-
-### 6. Check the Output Files
-
-the generated reports should appear inside the `outputs/` folder.
-
-```text
-outputs/course_demand_report.csv
-outputs/priority_students.csv
-```
-
-## Post-Intermediate Analytics
-
-The post-intermediate analytics step starts from `data/intermediate/tap_intermediate_data.csv`. This file already contains each student's requirement status in a wide format. The project converts it into `student_readiness_status.csv`, then creates graduation progress, course demand, and priority student reports.
-
-Input file:
-
-```text
-data/intermediate/tap_intermediate_data.csv
-```
-
-To run this part:
-
-```bash
-python src/prerequisite_checker.py
-python src/demand_report.py
-```
-
-Generated files:
-
-```text
-data/intermediate/student_readiness_status.csv
-outputs/student_graduation_summary.csv
-outputs/course_demand_report.csv
-outputs/priority_students.csv
-```
-
-To view the dashboard:
-
-```bash
-streamlit run app.py
 ```
 
 ## Dashboard
