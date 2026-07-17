@@ -6,7 +6,7 @@ gradpath is a course demand planning prototype that uses fake student records, d
 
 The goal is to help show how many students may need selected theatre courses in future semesters and which students may need priority access to stay on track for graduation.
 
-This project uses fictional data only. it does not use real student records.
+This project uses fictional data only. It does not use real student records.
 
 ## Team Members
 
@@ -58,7 +58,7 @@ python src/demand_report.py
 
 ### 6. Check the Output Files
 
-the generated reports should appear inside the `outputs/` folder.
+The generated reports should appear inside the `outputs/` folder.
 
 ```text
 outputs/course_demand_report.csv
@@ -128,18 +128,18 @@ gradpath tries to make this easier by using fake student data and course rules t
 
 ## What the Project Does
 
-gradpath will:
+Gradpath will:
 
-1. load (fake) student data
-2. load (fake) completed-course records
-3. load degree requirements
-4. load prerequisite rules
-5. compare completed courses with required courses
-6. identify missing required courses
-7. check whether prerequisites are complete
-8. estimate when each course may be needed
-9. create a course demand report
-10. create anonymized student priority groups
+1. Load (fake) student data
+2. Load (fake) completed-course records
+3. Load degree requirements
+4. Load prerequisite rules
+5. Compare completed courses with required courses
+6. Identify missing required courses
+7. Check whether prerequisites are complete
+8. Estimate when each course may be needed
+9. Create a course demand report
+10. Create anonymized student priority groups
 
 ## Planned Stack
 
@@ -228,9 +228,9 @@ gradpath/
 
 ### TheatreMajors.csv
 
-stores a list of theatre majors with fake student information.
+Stores a list of theatre majors with fake student information.
 
-expected columns:
+Expected columns:
 
 ```csv
 Term,Term Description,Last Name,First Name,UID,Count,Email,Camp,Coll,Dep 1,Levl,Prim Majr1,Prim Majr2,Seco Majr1,Seco Majr2,Minr1,Minr2,Prim Conc,Prim Conc2,Seco Conc,Seco Conc2,Class,Admit Term,Enrolled [Y/N],Stu Type,Student Type Description,Student Attribute,USF Earned Hours,Overall Earned Hours,USF GPA,Theatre Major,Theatre Conc
@@ -238,9 +238,9 @@ Term,Term Description,Last Name,First Name,UID,Count,Email,Camp,Coll,Dep 1,Levl,
 
 ### THE_Courses.csv, TPA_Courses.csv, TPP_Courses.csv, Practicum_Courses.csv
 
-stores fake completed courses grouped by course prefix.
+Stores fake completed courses grouped by course prefix.
 
-expected columns:
+Expected columns:
 
 ```csv
 Prefix,Number,Course Title,Section,CRN,Semester,UID,Name,Registration,Date,Midterm,Final,Grade Mode,Credits,Final Grade Entered,Passing,Passing Override
@@ -248,9 +248,9 @@ Prefix,Number,Course Title,Section,CRN,Semester,UID,Name,Registration,Date,Midte
 
 ### degree_requirements.csv
 
-stores required courses by degree and concentration.
+Stores required courses by degree and concentration.
 
-expected columns:
+Expected columns:
 
 ```csv
 Degree,Conc,Requirement,Course or Credit,Quantity,Courses Accepted
@@ -258,9 +258,9 @@ Degree,Conc,Requirement,Course or Credit,Quantity,Courses Accepted
 
 ### prerequisites.csv
 
-stores prerequisite rules.
+Stores prerequisite rules.
 
-expected columns:
+Expected columns:
 
 ```csv
 Course,'(',Requisite,Min Grade,Concurrency,')',And/Or
@@ -270,16 +270,16 @@ Course,'(',Requisite,Min Grade,Concurrency,')',And/Or
 
 For each student, the system will:
 
-1. find the student’s concentration
-2. find the courses required for that concentration
-3. find the courses the student already completed
-4. compare completed courses with required courses
-5. identify missing courses
-6. check whether prerequisites are complete
-7. estimate when each course may be needed
-8. assign a priority level if needed
+1. Find the student’s concentration
+2. Find the courses required for that concentration
+3. Find the courses the student already completed
+4. Compare completed courses with required courses
+5. Identify missing courses
+6. Check whether prerequisites are complete
+7. Estimate when each course may be needed
+8. Assign a priority level if needed
 
-example:
+Example:
 
 ```text
 student S001 completed:
@@ -287,13 +287,13 @@ THE 1000
 THE 2000
 THE 3100
 
-performance requirements:
+Performance requirements:
 THE 1000
 THE 2000
 THE 3100
 THE 4200
 
-missing course:
+Missing course:
 THE 4200
 
 THE 4200 requires THE 3100.
@@ -360,7 +360,7 @@ student_id,course_code,priority,reason
 
 ## Dashboard
 
-to open the dashboard, run:
+To open the dashboard, run:
 
 ```bash
 streamlit run app.py
@@ -368,51 +368,51 @@ streamlit run app.py
 
 The dashboard shows:
 
-1. course demand summary
-2. student priority groups
-3. filter by course
-4. filter by concentration
-5. chart of demand by course
+1. Course demand summary
+2. Student priority groups
+3. Filter by course
+4. Filter by concentration
+5. Chart of demand by course
 
 ## Project Scope
 
 This project will focus on:
 
-1. fake theatre student data
-2. selected required theatre courses
-3. prerequisite checking
-4. estimated course need categories
-5. course demand reports
-6. anonymized priority groups
+1. Fake theatre student data
+2. Selected required theatre courses
+3. Prerequisite checking
+4. Estimated course need categories
+5. Course demand reports
+6. Anonymized priority groups
 
 This project will not:
 
-1. use real student data
-2. replace degreeworks
-3. replace academic advisors
-4. register students
-5. create full student schedules
-6. assign instructors
-7. assign classrooms
-8. predict grades
+1. Use real student data
+2. Replace degreeworks
+3. Replace academic advisors
+4. Register students
+5. Create full student schedules
+6. Assign instructors
+7. Assign classrooms
+8. Predict grades
 
 ## Current Status
 
 Planned features:
 
-* [ ] create fake csv data
-* [ ] load data with pandas
-* [ ] clean course codes and records
-* [ ] match students to degree requirements
-* [ ] identify missing courses
-* [ ] check prerequisites
-* [ ] estimate course need categories
-* [ ] generate course demand report
-* [ ] generate priority student report
-* [ ] add optional streamlit dashboard
+* [x] Create fake csv data
+* [x] Load data with pandas
+* [x] Clean course codes and records
+* [x] Match students to degree requirements
+* [x] Identify missing courses
+* [x] Check prerequisites
+* [x] Estimate course need categories
+* [x] Generate course demand report
+* [x] Generate priority student report
+* [x] Add streamlit dashboard
 
 ## Final Goal
 
-the final goal is to create a working prototype that shows how course history, degree requirements, prerequisites, and course offering data can be used to estimate future course demand.
+The final goal is to create a working prototype that shows how course history, degree requirements, prerequisites, and course offering data can be used to estimate future course demand.
 
 gradpath is meant to support department planning by producing clear course demand counts and student priority groups from fake data.
