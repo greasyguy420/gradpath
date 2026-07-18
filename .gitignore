@@ -219,4 +219,6 @@ __marimo__/
 #
 # Local project outputs and intermediate data
 data/intermediate/*
+!data/intermediate/.gitkeep
 outputs/*
+!outputs/.gitkeep
