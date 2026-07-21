@@ -73,7 +73,7 @@ Select **http://localhost:8501/** in the text that appears here:
 ```
 Or type: **http://localhost:8501/** in your preferred browser.
 
-#####  You can now view your Streamlit app in your browser.
+**You can now view your Streamlit app in your browser.**
 
 ### 5. Closing the program
 Close the dashboard browser window. Then return to the terminal.
