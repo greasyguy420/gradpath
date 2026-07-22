@@ -385,6 +385,9 @@ Current Features:
 * [x] Add Streamlit Dashboard
 * [x] Containerize the application with Docker
 * [x] Add Docker build and run documentation
+* [ ] Configure Jenkins to automatically trigger builds from repository updates
+* [ ] Build the Docker image and execute Terraform deployment with Jenkins
+* [ ] Deploy the Docker container using Terraform
 
 ## Final Goal
 
