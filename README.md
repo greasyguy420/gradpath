@@ -32,7 +32,8 @@ docker build -t gradpath .
 ### 3. Build the Container from the Image
 The container's name is: **gradpath-test**.
 ```bash
-open http://localhost:8501 & docker run --rm --name gradpath-test -p 8501:8501 gradpath
+(sleep 3 && open http://localhost:8501) & \
+docker run --rm --name gradpath-test -p 8501:8501 gradpath
 ```
 
 ### 4. Check the Output Files
@@ -192,9 +193,11 @@ gradpath/
 │   └── priority_students.csv
 │
 ├── app.py
-├── requirements.txt
+├── Dockerfile
+├── PLANNING.md
 ├── README.md
-└── PLANNING.md
+├── requirements.txt
+└── run.sh
 ```
 
 ## Data Files
