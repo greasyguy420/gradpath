@@ -38,7 +38,7 @@ variable "allowed_app_cidr" {
 variable "repo_url" {
   description = "git repository cloned onto the ec2 instance"
   type        = string
-  default     = "https://github.com/typicaleoxx/gradpath.git"
+  default     = "https://github.com/greasyguy420/gradpath.git"
 }
 
 variable "repo_branch" {
