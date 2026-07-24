@@ -13,6 +13,7 @@ This project uses fictional data only. It does not use real student records.
 * Sneha Lama
 * Christopher Pyfrom
 * Joshua Smith
+* Yaimel Castro 
 
 ## How to Run the Project
 
