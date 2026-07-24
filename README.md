@@ -2,7 +2,7 @@
 
 ## Project Description
 
-gradpath is a course demand planning prototype that uses fake student records, degree requirements, prerequisites, and course offering data to estimate future course demand.
+gradpath is a course demand planning prototype that uses sample student records, degree requirements, prerequisites, and course offering data to estimate future course demand.
 
 The goal is to help show how many students may need selected theatre courses in future semesters and which students may need priority access to stay on track for graduation.
 
@@ -98,14 +98,14 @@ Common methods include:
 
 Previous enrollment numbers may not show future need accurately. Manual review may be more accurate, but it takes too much time.
 
-gradpath tries to make this easier by using fake student data and course rules to estimate course demand.
+gradpath tries to make this easier by using sample student data and course rules to estimate course demand.
 
 ## What the Project Does
 
 Gradpath will:
 
-1. Load (fake) student data
-2. Load (fake) completed-course records
+1. Load (sample) student data
+2. Load (sample) completed-course records
 3. Load degree requirements
 4. Load prerequisite rules
 5. Compare completed courses with required courses
@@ -130,7 +130,7 @@ Gradpath will:
 ## Project Architecture
 
 ```text
-fake csv data
+sample csv data
       |
       v
 data loading
@@ -204,7 +204,7 @@ gradpath/
 
 ### TheatreMajors.csv
 
-Stores a list of theatre majors with fake student information.
+Stores a list of theatre majors with sample student information.
 
 Expected columns:
 
@@ -214,7 +214,7 @@ Term,Term Description,Last Name,First Name,UID,Count,Email,Camp,Coll,Dep 1,Levl,
 
 ### THE_Courses.csv, TPA_Courses.csv, TPP_Courses.csv, Practicum_Courses.csv
 
-Stores fake completed courses grouped by course prefix.
+Stores sample completed courses grouped by course prefix.
 
 Expected columns:
 
@@ -354,7 +354,7 @@ The dashboard shows:
 
 This project will focus on:
 
-1. Fake theatre student data
+1. sample theatre student data
 2. Selected required theatre courses
 3. Prerequisite checking
 4. Estimated course need categories
@@ -376,7 +376,7 @@ This project will not:
 
 Current Features:
 
-* [x] Create fake csv data
+* [x] Create sample csv data
 * [x] Load data with pandas
 * [x] Clean course codes and records
 * [x] Match students to degree requirements
@@ -396,4 +396,4 @@ Current Features:
 
 The final goal is to create a working prototype that shows how course history, degree requirements, prerequisites, and course offering data can be used to estimate future course demand.
 
-gradpath is meant to support department planning by producing clear course demand counts and student priority groups from fake data.
+gradpath is meant to support department planning by producing clear course demand counts and student priority groups from sample data.
