@@ -5,7 +5,17 @@ __pycache__/
 
 # C extensions
 *.so
+# terraform local files
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+crash.log
+crash.*.log
 
+# private keys
+*.pem
+*.key
 # Distribution / packaging
 .Python
 build/
